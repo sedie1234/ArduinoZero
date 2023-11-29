@@ -1,22 +1,20 @@
 #include "sam.h"
 
-
-void Print(char* str, int size);
-
-void PORT_setup();
 void GCLK_setup();
+void PORT_setup();
 void USART_setup();
-void TCC0_setup();
+void RTC_setup();
 void SERCOM5_Handler();
+void RTC_handler(void);
+void Print(char* str, int size);
 
 char rx_data;
 
-int main()
+int main(void)
 {
 	char str[100] = "start\r\n";
 	
-	/* Initialize the SAM system */
-    SystemInit();
+	SystemInit();
 	
 	GCLK_setup();
 	
@@ -24,18 +22,20 @@ int main()
 	
 	USART_setup();
 	
-	TCC0_setup();
+	RTC_setup();
 	
 	SERCOM5->USART.INTENSET.reg = SERCOM_USART_INTENSET_RXC;
 	NVIC_EnableIRQ(SERCOM5_IRQn);
+	NVIC->ISER[0] = 1 << 3 ;
+	NVIC->IP[0] = 0x40 << 24 ;
 
 	Print(str, sizeof(str));
-	while(1) {
-		
-	}
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+    }
 }
-
-
 
 void GCLK_setup() {
 
@@ -46,7 +46,6 @@ void GCLK_setup() {
 	//SYSCTRL->OSC8M.bit.ENABLE = 1; // Enable
 
 	PM->APBCMASK.bit.SERCOM5_ = 1 ;
-	PM->APBCMASK.bit.TCC0_ = 1 ;
 
 	GCLK->GENCTRL.bit.ID = 0; // Generator #0
 	GCLK->GENCTRL.bit.SRC = 6; // OSC8M
@@ -61,12 +60,9 @@ void GCLK_setup() {
 	GCLK->CLKCTRL.bit.GEN = 0; // Generator #0 selected for RTC
 	GCLK->CLKCTRL.bit.CLKEN = 1; // Now, clock is supplied to RTC!
 	
-	GCLK->CLKCTRL.bit.ID = 0x1A;	//ID = TCC0, TCC1
-	GCLK->CLKCTRL.bit.GEN = 0;
-	GCLK->CLKCTRL.bit.CLKEN = 1;
 
 }
-	
+
 void PORT_setup(){
 	PORT->Group[1].PINCFG[22].reg = 0x41; // peripheral mux: DRVSTR=1, PMUXEN = 1
 	PORT->Group[1].PINCFG[23].reg = 0x41; // peripheral mux: DRVSTR=1, PMUXEN = 1
@@ -97,36 +93,16 @@ void USART_setup() {
 	
 }
 
-void TCC0_setup(){
-	
-	//PORT->Group[0].DIRSET.reg = PORT_PA18;
-	//PORT->Group[0].OUTCLR.reg = PORT_PA18;
-	
-	PORT->Group[0].PINCFG[18].reg = 0x41;
-	PORT->Group[0].PMUX[9].bit.PMUXE = 0x05;
-	
-	TCC0->CTRLA.bit.PRESCALER = 0x03; //DIV8 : 8MHz -> 1MHz
-	//TCC0->CTRLA.bit.PRESCSYNC = 1;
-	TCC0->WAVE.bit.WAVEGEN = 0x02;
-	//TCC0->WAVE.reg = TCC_WAVE_WAVEGEN_NPWM;
-
-	TCC0->PER.reg = 20000; //1MHz x 20000 = 20ms
-	TCC0->CC[2].reg = 1000; // 1ms
-	TCC0->CTRLA.bit.ENABLE = 1;
-	
-	
-}
-
 void Print(char* str, int size){
 	int i=0;
 	while(1){
 		if (SERCOM5->USART.INTFLAG.bit.DRE == 1) {
 			SERCOM5->USART.DATA.reg	= *(str+i);
-			i++;
+			i++;		
 		}
 		
 		if(i==size)
-		break;
+			break;
 	}
 	return;
 }
@@ -136,11 +112,31 @@ void SERCOM5_Handler(){
 	if(SERCOM5->USART.INTFLAG.bit.RXC){
 		rx_data	= SERCOM5->USART.DATA.reg;
 		SERCOM5->USART.DATA.reg	= rx_data;
-		if(rx_data == 'i'){
-			TCC0->CC[2].reg +=10;
-		}else if(rx_data == 'd'){
-			TCC0->CC[2].reg -=10;
-		}
 	}
 	
+}
+
+void RTC_setup() {
+
+	//
+	// RTC setup: MODE0 (32-bit counter) with COMPARE 0
+	//
+	RTC->MODE0.CTRL.bit.ENABLE = 0; // Disable first
+	RTC->MODE0.CTRL.bit.MODE = 0; // Mode 0
+	RTC->MODE0.CTRL.bit.MATCHCLR = 1; // match clear
+	RTC->MODE0.INTENSET.bit.CMP0 = 1; // compare 0 interrupt is enabled
+
+	RTC->MODE0.COMP->reg = 0x800000; // compare register to set up the period
+	//RTC->MODE0.COMP->reg = 0x10000; // compare register	to set up the peroid
+	RTC->MODE0.COUNT.reg = 0x0; // initialize the counter to 0
+	RTC->MODE0.CTRL.bit.ENABLE = 1; // Enable
+}
+
+void RTC_Handler(void)
+{
+	char str[100] = "interrupt!\r\n";
+	Print(str, sizeof(str));
+	
+	
+	RTC->MODE0.INTFLAG.bit.CMP0 = 1; // clear overflow interrupt flag
 }

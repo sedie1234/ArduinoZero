@@ -1,2 +1,6 @@
 ##BLE_TEST##
 BLE_test/BLE_test/Debug/*
+RCcar_Proj/RCcar_Proj/Debug/*
+Timer_interrupt/Timer_interrupt/Debug/*
+Timer_test/Timer_test/Debug/*
+Accelerometer/Accelerometer/Debug/*

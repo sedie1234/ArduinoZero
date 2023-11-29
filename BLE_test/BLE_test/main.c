@@ -16,6 +16,7 @@ void PORT_setup();
 void USART_setup();
 void SERCOM0_Handler();
 char rx_data;
+char rx_buf[100];
 
 int main()
 {
@@ -104,7 +105,12 @@ void USART_setup() {
 void SERCOM0_Handler(){
 
 	if(SERCOM0->USART.INTFLAG.bit.RXC){
+		static int cnt;
 		rx_data	= SERCOM0->USART.DATA.reg;
+		rx_buf[cnt++]=rx_data;
+		if(cnt == 90){
+			cnt = 0;
+		}
 		SERCOM0->USART.DATA.reg	= rx_data;
 	}
 	
