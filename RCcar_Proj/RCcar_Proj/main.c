@@ -10,6 +10,7 @@
 #include "uart.h"
 #include "tcc.h"
 #include "gpio.h"
+$include "i2c.h"
 
 void GCLK_setup();
 
@@ -22,6 +23,7 @@ int main(void)
     TCC0_setup();
     GPIO_setup();
     EIC_setup();
+    I2C_setup();
 
 //uart interrupt
 #if BLE_USE
