@@ -1,0 +1,46 @@
+﻿/*
+ * tcc.c
+ *
+ * Created: 2023-11-29 오후 7:09:08
+ *  Author: hwan
+ */ 
+#ifndef TCC_C_
+#define TCC_C_
+
+#include "tcc.h"
+#include "sam.h"
+void TCC0_setup(){
+
+    //power manager set
+    PM->APBCMASK.bit.TCC0_ = 1;
+
+    //GCLK set
+    GCLK->CLKCTRL.bit.ID = 0x1A;	//ID = TCC0, TCC1
+	GCLK->CLKCTRL.bit.GEN = 0;
+	GCLK->CLKCTRL.bit.CLKEN = 1;
+
+    //Port set : PA18-TCC0
+	PORT->Group[0].PINCFG[18].reg = 0x41;
+	PORT->Group[0].PMUX[9].bit.PMUXE = 0x05;
+
+    PORT->Group[0].PINCFG[8].reg = 0x41;
+	PORT->Group[0].PMUX[4].bit.PMUXE = 0x04; //function F
+
+    PORT->Group[0].PINCFG[9].reg = 0x41;
+	PORT->Group[0].PMUX[4].bit.PMUXO = 0x04; //function F
+	
+    //TCC set
+	TCC0->CTRLA.bit.PRESCALER = 0x03; //DIV8 : 8MHz -> 1MHz
+	TCC0->WAVE.bit.WAVEGEN = 0x02;
+	
+	TCC0->PER.reg = 20000; //1MHz x 20000 = 20ms
+	TCC0->CC[0].reg = 1000; // 1ms //motor ENB
+    TCC0->CC[1].reg = 1500; // 1ms //motor EnA
+    TCC0->CC[2].reg = 2000; // 1ms //servo motor
+	TCC0->CTRLA.bit.ENABLE = 1;
+	
+}
+
+
+
+#endif

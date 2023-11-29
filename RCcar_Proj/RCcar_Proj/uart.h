@@ -12,6 +12,8 @@
 #define BLE_USE         0 //BEL <-> PC_COM ON/OFF
 
 void USART_setup();
+void Print(char* str, int size);
+void Parse();
 
 #if BLE_USE
 void SERCOM0_Handler();

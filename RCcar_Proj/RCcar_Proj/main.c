@@ -8,6 +8,7 @@
 
 #include "sam.h"
 #include "uart.h"
+#include "tcc.h"
 
 void GCLK_setup();
 
@@ -16,7 +17,9 @@ int main(void)
 
     SystemInit();
 	GCLK_setup();
-    USART_setup();	
+    USART_setup();
+    TCC0_setup();
+    
 
 //uart interrupt
 #if BLE_USE
@@ -29,7 +32,7 @@ int main(void)
 
     /* Replace with your application code */
     while (1) {
-        
+
     }
 }
 

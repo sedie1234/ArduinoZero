@@ -8,8 +8,13 @@
 #define UART_C_
 
 #include "sam.h"
+#include "uart.h"
+#include <stdio.h>
+#include <string.h>
 
 char rx_data;
+char rx_buf[200];
+int rx_cnt=0;
 
 void USART_setup(){
 
@@ -87,17 +92,64 @@ void SERCOM0_Handler(){
 	if(SERCOM0->USART.INTFLAG.bit.RXC){
 		rx_data	= SERCOM0->USART.DATA.reg;
 		SERCOM0->USART.DATA.reg	= rx_data;
+        rx_buf[rx_cnt++] = rx_data;
+        if(rx_data == 10 || rx_data == 13){
+            Parse();
+            rx_cnt = 0;
+            memset(rx_buf, 0, sizeof(rx_buf));
+        }
 	}
 }
 
+void Print(char* str, int size){
+	int i=0;
+	while(1){
+		if (SERCOM0->USART.INTFLAG.bit.DRE == 1) {
+			SERCOM0->USART.DATA.reg	= *(str+i);
+			i++;
+		}
+		
+		if(i==size)
+		break;
+	}
+	return;
+}
 #else
 void SERCOM5_Handler(){
     if(SERCOM5->USART.INTFLAG.bit.RXC){
 		rx_data	= SERCOM5->USART.DATA.reg;
 		SERCOM5->USART.DATA.reg	= rx_data;
+        rx_buf[rx_cnt++] = rx_data;
+        if(rx_data == 10 || rx_data == 13){
+            Parse();
+            rx_cnt = 0;
+            memset(rx_buf, 0, sizeof(rx_buf));
+        }
 	}
 }
 
+void Print(char* str, int size){
+	int i=0;
+	while(1){
+		if (SERCOM5->USART.INTFLAG.bit.DRE == 1) {
+			SERCOM5->USART.DATA.reg	= *(str+i);
+			i++;
+		}
+
+		if(i==size)
+		break;
+	}
+	return;
+}
 #endif
+
+void Parse(){
+
+    char* ptr;
+    if((ptr = strstr(rx_buf, "servo"))!=NULL){
+        //servo command
+    }
+
+}
 
 #endif
