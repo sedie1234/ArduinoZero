@@ -9,6 +9,7 @@
 
 #include "tcc.h"
 #include "sam.h"
+
 void TCC0_setup(){
 
     //power manager set
