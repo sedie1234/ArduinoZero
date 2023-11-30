@@ -10,7 +10,8 @@
 #include "uart.h"
 #include "tcc.h"
 #include "gpio.h"
-$include "i2c.h"
+#include "i2c.h"
+#include "timer.h"
 
 void GCLK_setup();
 
@@ -24,6 +25,7 @@ int main(void)
     GPIO_setup();
     EIC_setup();
     I2C_setup();
+	RTC_setup();
 
 //uart interrupt
 #if BLE_USE
@@ -33,9 +35,13 @@ int main(void)
     SERCOM5->USART.INTENSET.reg = SERCOM_USART_INTENSET_RXC;
     NVIC_EnableIRQ(SERCOM5_IRQn);
 #endif
+	NVIC->ISER[0] |= 1 << 3 ;
+	NVIC->IP[0] = 0x40 << 24 ;
 
     NVIC->ISER[0] |= 1 << 4 ;  // Interrupt Set Enable for EIC
 	NVIC->IP[1] = 0x40 << 0 ; // priority for EIC: IP1[7:0] = 0x40 (=b0100_0000, 2-bit MSBs)	
+
+    
 
 	PORT->Group[0].OUT.reg |= 1 << 10;
 
