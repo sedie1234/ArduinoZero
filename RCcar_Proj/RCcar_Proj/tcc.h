@@ -11,6 +11,7 @@
 
 
 void TCC0_setup();
+void TC4_setup();
 
 
 

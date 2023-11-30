@@ -7,6 +7,8 @@
 #ifndef UART_C_
 #define UART_C_
 
+#define NUM_PRINT_LEN	20
+
 #include "sam.h"
 #include "uart.h"
 #include <stdio.h>
@@ -114,6 +116,25 @@ void Print(char* str, int size){
 	}
 	return;
 }
+
+void PrintNum(int num){
+	char str[10];
+	int i;
+	for(i=0; i<10; i++){
+		str[i] = num%10 + '0';
+		num = num/10;
+		if(num==0)
+			break;
+	}
+	while(i+1){
+		if (SERCOM0->USART.INTFLAG.bit.DRE == 1) {
+			SERCOM0->USART.DATA.reg	= *(str+i);
+			i--;
+		}
+	}
+
+}
+
 #else
 void SERCOM5_Handler(){
     if(SERCOM5->USART.INTFLAG.bit.RXC){
@@ -140,6 +161,24 @@ void Print(char* str, int size){
 		break;
 	}
 	return;
+}
+
+void PrintNum(uint32_t num){
+	char str[NUM_PRINT_LEN];
+	int i;
+	for(i=0; i<NUM_PRINT_LEN; i++){
+		str[i] = num%10 + '0';
+		num = num/10;
+		if(num==0)
+			break;
+	}
+	while(i+1){
+		if (SERCOM5->USART.INTFLAG.bit.DRE == 1) {
+			SERCOM5->USART.DATA.reg	= str[i];
+			i--;
+		}
+	}
+
 }
 #endif
 

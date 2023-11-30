@@ -37,11 +37,23 @@ void TCC0_setup(){
 	TCC0->PER.reg = 20000; //1MHz x 20000 = 20ms
 	TCC0->CC[0].reg = 1000; // 1ms //motor ENB
     TCC0->CC[1].reg = 1500; // 1ms //motor EnA
-    TCC0->CC[2].reg = 2000; // 1ms //servo motor
+    TCC0->CC[2].reg = 10000; // 1ms //servo motor
 	TCC0->CTRLA.bit.ENABLE = 1;
 	
 }
 
+void TC4_setup(){
+	PM->APBCMASK.bit.TC4_ = 1 ; // Clock Enable (APBC clock) for TC4
 
+	GCLK->CLKCTRL.bit.ID = 0x1C; // ID #ID (TC4, TC5)
+	GCLK->CLKCTRL.bit.GEN = 0; // Generator #0 selected for TC4, TC5
+	GCLK->CLKCTRL.bit.CLKEN = 1; // Now, clock is supplied to TC4, TC5
+	
+	TC4->COUNT32.CTRLA.bit.MODE = 0x2; //count32 mode
+	TC4->COUNT32.CTRLA.bit.PRESCALER = 3; // prescaler = 8 : 1Mhz clock, 1count = 1us
+	TC4->COUNT32.COUNT.reg = 0; //counter init
+	TC4->COUNT32.CTRLA.bit.ENABLE = 1;
+
+}
 
 #endif

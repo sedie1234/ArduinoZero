@@ -10,7 +10,7 @@
 #define TIMER_H_
 
 void RTC_setup();
-
 void RTC_Handler();
+void TimerDelay(int us);
 
 #endif /* TIMER_H_ */

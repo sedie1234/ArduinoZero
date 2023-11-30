@@ -14,6 +14,8 @@
 #include "uart.h"
 #include "sam.h"
 
+int distance;
+
 void GPIO_setup(){
 
     //GCLK set : EIC
@@ -25,6 +27,7 @@ void GPIO_setup(){
     //PA10 - UltraSonic Trigger
     PORT->Group[0].PINCFG[10].reg = 0;
     PORT->Group[0].DIR.reg |= 0x1 << 10;
+	PORT->Group[0].OUT.reg = 0 << 10 ;
 
     //PA17 - LIS2DW12 CS
 	PORT->Group[0].PINCFG[17].reg = 0;
@@ -79,30 +82,39 @@ void EIC_setup(){
 	EIC->CONFIG[1].bit.FILTEN7 = 1;    // filter is enabled
 	EIC->CONFIG[1].bit.SENSE7 = 0x3;   // Both-edges detection
 	EIC->INTENSET.bit.EXTINT15 = 1;    // External Interrupt 15 is enabled
-/*	
+
     EIC->CONFIG[0].bit.FILTEN0 = 1;    // filter is enabled
 	EIC->CONFIG[0].bit.SENSE0 = 0x3;   // Both-edges detection
 	EIC->INTENSET.bit.EXTINT0 = 1;    // External Interrupt 15 is enabled
-*/
+
 	EIC->CTRL.bit.ENABLE = 1;          // EIC is enabled	
 }
-
 
 void EIC_Handler(void)
 {
 	
 	char str[100] = "EIC handler\r\n";
 	int flag = EIC->INTFLAG.reg;
-    Print(str, sizeof(str));
+	static int prev_us;
+	static int curr_us;
+	static uint32_t cnt;
+	//static int Num_EIC_interrupts;
+    //Print(str, sizeof(str));
 	//PA11 - INT11 	
 	if(flag&(1<<11)){
-		Print("INT11", 5);
-		if((PORT->Group[0].IN.reg>>11)&0x01){
-			Print(" - 1", 4);
-		}else{
-			Print(" - 0", 4);
+
+		EIC->INTFLAG.bit.EXTINT11 = 1 ; // Clear the EXTINT3 interrupt flag
+		// curr_us = TC4->COUNT32.COUNT.reg;
+		// distance = (curr_us - prev_us) * 0.17 ; // distance in mm
+		cnt++;
+		curr_us = RTC->MODE0.COUNT.reg;
+		if(cnt==2){
+			distance = (curr_us - prev_us) /8 * 0.17; // distance in mm
+			PrintNum(distance);
+			Print("\r\n", 2);
+			cnt = 0;
 		}
-		Print("\r\n", 2);
+		prev_us = curr_us;
 	}
 	//PA19 - INT3 
 	if(flag&(1<<3)){
@@ -141,5 +153,19 @@ void EIC_Handler(void)
 	
 }
 
+void SetHigh(int group, int port){
+
+	PORT->Group[group].OUT.reg |= 1 << port;
+
+}
+
+void SetLow(int group, int port){
+
+	int value = 0;
+	value |= 1 << port;
+	value = ~value;
+	PORT->Group[group].OUT.reg &= value;
+
+}
 
 #endif 

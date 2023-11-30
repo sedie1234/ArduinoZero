@@ -13,5 +13,9 @@
 void GPIO_setup();
 void EIC_setup();
 void EIC_Handler();
+void SetHigh(int group, int port);
+void SetLow(int group, int port);
+
+
 
 #endif /* GPIO_H_ */

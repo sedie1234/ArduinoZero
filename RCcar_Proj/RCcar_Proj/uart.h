@@ -13,6 +13,7 @@
 
 void USART_setup();
 void Print(char* str, int size);
+void PrintNum(uint32_t num);
 void Parse();
 
 #if BLE_USE
