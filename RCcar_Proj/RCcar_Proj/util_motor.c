@@ -32,7 +32,6 @@ void ServoAngle(int angle){
 }
 
 void DirectionSet(int sel, int dir){
-
     if(sel == 0){
         if(dir&0x01){
             SetHigh(0, 20);

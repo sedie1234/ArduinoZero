@@ -50,6 +50,16 @@ int main(void)
     /* Replace with your application code */
     while (1) {
 
+        if(cmd == -1){
+            //동작 x
+        }else if(cmd == 0){
+            //run 동작 //->main
+        }else if (cmd == 1){
+            //run 동작 < go , stop, rotation <실험용
+        }else if(cmd == 2){
+            //go
+        }
+
     }
 }
 

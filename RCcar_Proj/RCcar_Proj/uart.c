@@ -185,10 +185,23 @@ void PrintNum(uint32_t num){
 void Parse(){
 
     char* ptr;
-    if((ptr = strstr(rx_buf, "servo"))!=NULL){
+    if((ptr = strstr(rx_buf, "run"))!=NULL){
         //servo command
-    }
+		cmd = 0;
+    }else if((ptr = strstr(rx_buf, "run"))!=NULL){
+		//run command
+		run_param[0] = Str2Int(ptr+4, 2);
+		cmd = 1;
+	}
 
 }
 
+int Str2Int(char* str, int size){
+	int num=0;
+	for(int i=size; i>0; i--){
+		num = num*10;
+		num += *(str+i) - '0';
+	}
+	return num;
+}
 #endif

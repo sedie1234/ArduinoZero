@@ -15,6 +15,7 @@ void USART_setup();
 void Print(char* str, int size);
 void PrintNum(uint32_t num);
 void Parse();
+int Str2Int(char* str, int size);
 
 #if BLE_USE
 void SERCOM0_Handler();

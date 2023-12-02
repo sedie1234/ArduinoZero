@@ -153,6 +153,7 @@ void EIC_Handler(void)
 	
 }
 
+//group : A = 0 // B = 1
 void SetHigh(int group, int port){
 
 	PORT->Group[group].OUT.reg |= 1 << port;
@@ -166,6 +167,10 @@ void SetLow(int group, int port){
 	value = ~value;
 	PORT->Group[group].OUT.reg &= value;
 
+}
+
+bool ReadPin(int group, int port){
+	return (PORT->Group[group].IN.reg>>port)&0x01;
 }
 
 #endif 
