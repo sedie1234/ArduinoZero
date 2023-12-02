@@ -17,6 +17,16 @@
 
 extern int distance;
 
+extern int state;
+extern int LT0_flag;
+extern int LT1_flag;
+extern int LT2_flag;
+extern int LT0;
+extern int LT1;
+extern int LT2;
+extern int stop_cnt;
+extern int runstart;
+
 void GPIO_setup(){
 
     //GCLK set : EIC
@@ -103,8 +113,6 @@ void EIC_Handler(void)
     //Print(str, strlen(str));
 	//PA11 - INT11 	
 	if(flag&(1<<11)){
-		PrintNum(cnt);
-		Print("\r\n", 2);
 		EIC->INTFLAG.bit.EXTINT11 = 1 ; // Clear the EXTINT3 interrupt flag
 		// curr_us = TC4->COUNT32.COUNT.reg;
 		// distance = (curr_us - prev_us) * 0.17 ; // distance in mm
@@ -112,42 +120,43 @@ void EIC_Handler(void)
 		curr_us = RTC->MODE0.COUNT.reg;
 		if(cnt==2){
 			distance = (curr_us - prev_us) /8 * 0.17; // distance in mm
-			PrintNum(distance);
-			Print("\r\n", 2);
 			cnt = 0;
 		}
 		prev_us = curr_us;
 	}
-	//PA19 - INT3 
-	if(flag&(1<<3)){
-		Print("INT3", 5);
-		if((PORT->Group[0].IN.reg>>19)&0x01){
-			Print(" - 1", 4);
-		}else{
-			Print(" - 0", 4);
+
+	if(runstart){
+		//PA19 - INT3 -left
+		if(flag&(1<<3)){
+			LT0_flag = 1;
+			if((PORT->Group[0].IN.reg>>19)&0x01){
+				LT0 = 1;
+			}else{
+				LT0 = 0;
+			}
 		}
-		Print("\r\n", 2);
-	}
-	//PA15 - INT15 
-	if(flag&(1<<15)){
-		Print("INT15", 5);
-		if((PORT->Group[0].IN.reg>>15)&0x01){
-			Print(" - 1", 4);
-		}else{
-			Print(" - 0", 4);
+
+		//PA15 - INT15 -mid
+		if(flag&(1<<15)){
+			LT1_flag = 1;
+			if((PORT->Group[0].IN.reg>>15)&0x01){
+				LT1 = 1;
+			}else{
+				LT1 = 0;
+			}
 		}
-		Print("\r\n", 2);
-	}
-	//PA16 - INT0 
-	if(flag&(1<<0)){
-		Print("INT0", 5);
-		if((PORT->Group[0].IN.reg>>16)&0x01){
-			Print(" - 1", 4);
-		}else{
-			Print(" - 0", 4);
+
+		//PA16 - INT0 -right
+		if(flag&(1<<0)){
+			LT2_flag = 1;
+			if((PORT->Group[0].IN.reg>>16)&0x01){
+				LT2 = 1;
+			}else{
+				LT2 = 0;
+			}
 		}
-		Print("\r\n", 2);
 	}
+	
 	EIC->INTFLAG.bit.EXTINT11 = 1 ;
 	EIC->INTFLAG.bit.EXTINT3 = 1 ;
 	EIC->INTFLAG.bit.EXTINT15 = 1 ;

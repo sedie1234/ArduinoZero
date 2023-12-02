@@ -33,7 +33,7 @@ void RTC_Handler()
 {
     //static int cnt;
 	char str[100] = "int\r\n";
-	Print(str, strlen(str));
+	//Print(str, strlen(str));
     //PrintNum(cnt);
 	
     //ultra sonic

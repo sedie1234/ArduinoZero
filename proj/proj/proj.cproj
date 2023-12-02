@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>RCcar_Proj</AssemblyName>
-    <Name>RCcar_Proj</Name>
-    <RootNamespace>RCcar_Proj</RootNamespace>
+    <AssemblyName>proj</AssemblyName>
+    <Name>proj</Name>
+    <RootNamespace>proj</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -143,13 +143,67 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="application.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="application.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="configs.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="configs.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Device_Startup\startup_samd21.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Device_Startup\system_samd21.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="gpio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mems.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mems.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="tcc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="tcc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="util_motor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="util_motor.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

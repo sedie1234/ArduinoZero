@@ -15,9 +15,11 @@
 #include "mems.h"
 #include "util_motor.h"
 #include "configs.h"
+#include "application.h"
 
 extern int cmd;
 extern int test;
+extern int params[PARAM_SIZE];
 
 void GCLK_setup();
 
@@ -54,44 +56,34 @@ int main(void)
 
     /* Replace with your application code */
     while (1) {
-        cmd=18;
         if(cmd == -1){
-        //멈춤
-        }else if(cmd == 0){
-        //전진
-            MotorSpeedSet(2,10000);
-            DirectionSet(0, 1);
-            DirectionSet(1, 1);
-        }else if (cmd == 1){
-        //좌회전
-            MotorSpeedSet(0,10000);
-            MotorSpeedSet(1,20000);
-        //}else if (cmd == 2){
-        //우회전 기능 추가시
-        }else if (cmd == 3){
-        //Missing
-            ServoAngle(0);
-        }else if (cmd == 18){
-        //test
-            for(int i=0; i<10; i++){
-                DirectionSet(0, 1);
-                DirectionSet(1, 1);
-				MotorSpeedSet(2,20000);
-                TimerDelay(3000000);
-				MotorSpeedSet(2,0);
-                DirectionSet(0, 2);
-                DirectionSet(1, 2);
-				MotorSpeedSet(2,20000);
-                TimerDelay(3000000);
-				MotorSpeedSet(2,0);
-			}
             while(test);
-            test = 1;            
-     
-		TimerDelay(1000000);
-        // }else if(cmd == 2){
-        //     //go
-        // }
+            test = 1;
+        //none
+        }else if(cmd == 0){
+        //run command
+            AppInit();
+			AppRun(params[0], params[1], params[2], params[3], params[4]);
+            while(test);
+            test = 1;
+        }else if (cmd == 1){
+        //go command
+            FuncGo(params[0]);
+            TimerDelay(params[1]*1000);
+            FuncStop();
+            while(test);
+            test = 1;
+        }else if (cmd == 2){
+        //stop command
+            while(test);
+            test = 1;
+        }else if (cmd == 3){
+        //turn command
+            FuncTurnLeft(params[0]);
+			TimerDelay(params[1]*1000);
+            FuncStop();
+            while(test);
+            test = 1;
         }
     }
 }

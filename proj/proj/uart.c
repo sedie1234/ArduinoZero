@@ -7,7 +7,7 @@
 #ifndef UART_C_
 #define UART_C_
 
-#define NUM_PRINT_LEN	20
+
 
 #include "sam.h"
 #include "uart.h"
@@ -18,10 +18,11 @@
 extern int cmd;
 
 extern int test;
+extern int params[PARAM_SIZE];
 
-char rx_data;
-char rx_buf[200];
-int rx_cnt=0;
+extern char rx_data;
+extern char rx_buf[200];
+extern int rx_cnt;
 
 void USART_setup(){
 
@@ -188,27 +189,50 @@ void PrintNum(uint32_t num){
 #endif
 
 //commands
-//
+//run default_speed(10000~20000) diff_speed(0000~5000) turning_speed(00000~20000) threshold_distance(mm)(0000) end_condition(00)
+//run 00000 0000 00000 0000 00
+
+//go speed(00000~20000) time(ms)
+//go 00000 0000
+//go params[0] = speed
+//go params[1] = time
+
+//turn speed(00000~20000) time(ms)
+//turn 00000 0000
+//turn params[0] = speed
+//turn params[1] = time
 void Parse(){
 
     char* ptr;
+	Print(rx_buf, strlen(rx_buf));
     if((ptr = strstr(rx_buf, "run"))!=NULL){
-        //ryb
 		cmd = 0;
 		test = 0;
+		params[0] = Str2Int(ptr+4, 5);
+		params[1] = Str2Int(ptr+10, 4);
+		params[2] = Str2Int(ptr+15, 5);
+		params[3] = Str2Int(ptr+21, 4);
+		params[4] = Str2Int(ptr+26, 2);
     }else if((ptr = strstr(rx_buf, "go"))!=NULL){
 		cmd = 1;
+		test = 0;
+		params[0] = Str2Int(ptr+3, 5);
+		params[1] = Str2Int(ptr+9, 4);
 	}else if((ptr = strstr(rx_buf, "stop"))!=NULL){
 		cmd = 2;
+		test = 0;
 	}else if((ptr = strstr(rx_buf, "turn"))!=NULL){
-		cmd = 3;	
+		cmd = 3;
+		test = 0;	
+		params[0] = Str2Int(ptr+5, 5);
+		params[1] = Str2Int(ptr+11, 4);
 	}
 
 }
 
 int Str2Int(char* str, int size){
 	int num=0;
-	for(int i=size; i>0; i--){
+	for(int i=0; i<size; i++){
 		num = num*10;
 		num += *(str+i) - '0';
 	}

@@ -36,8 +36,8 @@ void TCC0_setup(){
 	TCC0->WAVE.bit.WAVEGEN = 0x02;
 	
 	TCC0->PER.reg = 20000; //1MHz x 20000 = 20ms
-	TCC0->CC[0].reg = 1000; // 1ms //motor ENB
-    TCC0->CC[1].reg = 1500; // 1ms //motor EnA
+	TCC0->CC[0].reg = 0; // 1ms //motor ENB
+    TCC0->CC[1].reg = 0; // 1ms //motor EnA
     TCC0->CC[2].reg = 1000; // 1ms //servo motor
 	TCC0->CTRLA.bit.ENABLE = 1;
 	
