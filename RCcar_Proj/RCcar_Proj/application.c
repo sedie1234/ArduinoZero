@@ -11,6 +11,7 @@
 #include "application.h"
 #include "util_motor.h"
 #include "configs.h"
+#include "timer.h"
 
 void AppGo(){
 
@@ -34,9 +35,21 @@ void FuncGoBack(int speed){
     
 }
 
-void FuncTurnLeft(){
-
+void FuncTurnLeft(int speed, int time){
+    MotorSpeedSet(2, 0);
+    DirectionSet(Left, 2);
+    DirectionSet(Rihgt, 1);
+    MotorSpeedSet(2, speed);
+    TimerDelay(time);
+    MotorSpeedSet(2, 0);
 }
 
-
+void FuncTurnRight(int speed, int time){
+    MotorSpeedSet(2, 0);
+    DirectionSet(Left, 1);
+    DirectionSet(Rihgt, 2);
+    MotorSpeedSet(2, speed);
+    TimerDelay(time);
+    MotorSpeedSet(2, 0);
+}
 #endif

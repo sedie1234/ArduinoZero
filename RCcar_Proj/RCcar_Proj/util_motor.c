@@ -10,6 +10,8 @@
 #include "sam.h"
 #include "util_motor.h"
 #include "gpio.h"
+#include "configs.h"
+#include "timer.h"
 
 void MotorSpeedSet(int sel, int speed){
 
@@ -19,6 +21,7 @@ void MotorSpeedSet(int sel, int speed){
         TCC0->CC[0].reg = speed;
     }else if(sel == 2){
         TCC0->CC[0].reg = speed;
+        TimerDelay(10);
         TCC0->CC[1].reg = speed;
     }
 

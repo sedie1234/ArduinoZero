@@ -10,14 +10,15 @@
 #define APPLICATION_H_
 
 
-
-
-//applications
+/****applictions****/
 void AppGo();
 
-//functions
+
+/******functions******/
+//motor functions
 void FuncGo();
 void FuncGoBack();
-void FuncTurnLeft();
+void FuncTurnLeft(int speed, int time);
+void FuncTurnRight(int speed, int time);
 
 #endif /* APPLICATION_H_ */
