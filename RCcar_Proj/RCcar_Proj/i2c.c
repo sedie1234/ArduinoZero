@@ -9,6 +9,7 @@
 
 #include "sam.h"
 #include "i2c.h"
+#include "configs.h"
 
 void I2C_setup() {
 

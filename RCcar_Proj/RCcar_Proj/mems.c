@@ -8,6 +8,7 @@
 #define MEMS_C
 
 #include "sam.h"
+#include "configs.h"
 
 void LIS2DH_I2C_write(unsigned char reg_addr, unsigned char data) {
 	

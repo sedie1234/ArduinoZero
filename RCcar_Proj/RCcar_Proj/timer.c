@@ -11,6 +11,7 @@
 #include "timer.h"
 #include "uart.h"
 #include "gpio.h"
+#include "configs.h"
 
 void RTC_setup(){
     GCLK->CLKCTRL.bit.ID = 4; // ID #4 (RTC)

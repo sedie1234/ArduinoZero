@@ -13,8 +13,9 @@
 #include "gpio.h"
 #include "uart.h"
 #include "sam.h"
+#include "configs.h"
 
-int distance;
+extern int distance;
 
 void GPIO_setup(){
 

@@ -46,15 +46,15 @@ void DirectionSet(int sel, int dir){
         }
     }else if(sel==1){
         if(dir&0x01){
-            SetHigh(0, 2);
-        }else{
             SetLow(0, 2);
+        }else{
+            SetHigh(0, 2);
         }
 
         if(dir&0x02){
-            SetHigh(0, 14);
-        }else{
             SetLow(0, 14);
+        }else{
+            SetHigh(0, 14);
         }
     }
 }

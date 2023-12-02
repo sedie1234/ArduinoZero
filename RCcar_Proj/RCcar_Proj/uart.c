@@ -11,8 +11,13 @@
 
 #include "sam.h"
 #include "uart.h"
+#include "configs.h"
 #include <stdio.h>
 #include <string.h>
+
+extern int cmd;
+
+extern int test;
 
 char rx_data;
 char rx_buf[200];
@@ -182,16 +187,21 @@ void PrintNum(uint32_t num){
 }
 #endif
 
+//commands
+//
 void Parse(){
 
     char* ptr;
     if((ptr = strstr(rx_buf, "run"))!=NULL){
-        //servo command
-		//cmd = 0;
-    }else if((ptr = strstr(rx_buf, "run"))!=NULL){
-		//run command
-		//run_param[0] = Str2Int(ptr+4, 2);
-		//cmd = 1;
+        //ryb
+		cmd = 0;
+		test = 0;
+    }else if((ptr = strstr(rx_buf, "go"))!=NULL){
+		cmd = 1;
+	}else if((ptr = strstr(rx_buf, "stop"))!=NULL){
+		cmd = 2;
+	}else if((ptr = strstr(rx_buf, "turn"))!=NULL){
+		cmd = 3;	
 	}
 
 }
