@@ -117,7 +117,7 @@ void Print(char* str, int size){
 	return;
 }
 
-void PrintNum(int num){
+void PrintNum(uint32_t num){
 	char str[10];
 	int i;
 	for(i=0; i<10; i++){
@@ -187,11 +187,11 @@ void Parse(){
     char* ptr;
     if((ptr = strstr(rx_buf, "run"))!=NULL){
         //servo command
-		cmd = 0;
+		//cmd = 0;
     }else if((ptr = strstr(rx_buf, "run"))!=NULL){
 		//run command
-		run_param[0] = Str2Int(ptr+4, 2);
-		cmd = 1;
+		//run_param[0] = Str2Int(ptr+4, 2);
+		//cmd = 1;
 	}
 
 }

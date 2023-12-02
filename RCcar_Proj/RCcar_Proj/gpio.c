@@ -99,10 +99,11 @@ void EIC_Handler(void)
 	static int curr_us;
 	static uint32_t cnt;
 	//static int Num_EIC_interrupts;
-    //Print(str, sizeof(str));
+    //Print(str, strlen(str));
 	//PA11 - INT11 	
 	if(flag&(1<<11)){
-
+		PrintNum(cnt);
+		Print("\r\n", 2);
 		EIC->INTFLAG.bit.EXTINT11 = 1 ; // Clear the EXTINT3 interrupt flag
 		// curr_us = TC4->COUNT32.COUNT.reg;
 		// distance = (curr_us - prev_us) * 0.17 ; // distance in mm
@@ -169,7 +170,7 @@ void SetLow(int group, int port){
 
 }
 
-bool ReadPin(int group, int port){
+int ReadPin(int group, int port){
 	return (PORT->Group[group].IN.reg>>port)&0x01;
 }
 

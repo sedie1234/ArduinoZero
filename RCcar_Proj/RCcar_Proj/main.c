@@ -12,12 +12,14 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "timer.h"
+#include "mems.h"
 
 void GCLK_setup();
+void ServoAngle(int angle);
 
 int main(void)
 {
-
+	
     SystemInit();
 	GCLK_setup();
     USART_setup();
@@ -42,23 +44,22 @@ int main(void)
     NVIC->ISER[0] |= 1 << 4 ;  // Interrupt Set Enable for EIC
 	NVIC->IP[1] = 0x40 << 0 ; // priority for EIC: IP1[7:0] = 0x40 (=b0100_0000, 2-bit MSBs)	
 
+    LIS2DH_I2C_write(0x20, 0x57); // write 0x50 to 0x20 (=CTRL_REG1) register
 
-    //PA20, PA2 high
-    //PORT->Group[0].OUT.reg |= 1 << 20;
-    //PORT->Group[0].OUT.reg |= 1 << 2;
+
 
     /* Replace with your application code */
     while (1) {
-
-        if(cmd == -1){
-            //동작 x
-        }else if(cmd == 0){
-            //run 동작 //->main
-        }else if (cmd == 1){
-            //run 동작 < go , stop, rotation <실험용
-        }else if(cmd == 2){
-            //go
-        }
+        // if(cmd == -1){
+        //     //동작 x
+        // }else if(cmd == 0){
+        //     //run 동작 //->main
+        ServoAngle(150);
+        // }else if (cmd == 1){
+        //     //run 동작 < go , stop, rotation <실험용
+        // }else if(cmd == 2){
+        //     //go
+        // }
 
     }
 }

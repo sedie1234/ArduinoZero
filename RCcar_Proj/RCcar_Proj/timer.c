@@ -30,9 +30,10 @@ void RTC_setup(){
 
 void RTC_Handler()
 {
-    static int cnt;
-	char str[100] = "interrupt!\r\n";
-	Print(str, sizeof(str));
+    //static int cnt;
+	char str[100] = "int\r\n";
+	Print(str, strlen(str));
+    //PrintNum(cnt);
 	
     //ultra sonic
     SetLow(0, 10);
@@ -40,10 +41,15 @@ void RTC_Handler()
     SetHigh(0, 10);
     TimerDelay(10);
     SetLow(0, 10);
-    cnt++;
-    if(cnt%4 == 0){
+    //cnt++;
+
+    unsigned char buffer[6];
+    short x_mg, y_mg, z_mg;
+    //if(cnt%4 == 0){
+    if(0){
         //every 200ms, Accelerometer
-        
+        LIS2DH_I2C_read_multiple_data(0x28, 6, buffer); //
+        bytes_to_ints(buffer, &x_mg, &y_mg, &z_mg);
     }
 	
 	RTC->MODE0.INTFLAG.bit.CMP0 = 1; // clear overflow interrupt flag
