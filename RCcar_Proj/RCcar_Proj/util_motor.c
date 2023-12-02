@@ -21,7 +21,6 @@ void MotorSpeedSet(int sel, int speed){
         TCC0->CC[0].reg = speed;
     }else if(sel == 2){
         TCC0->CC[0].reg = speed;
-        TimerDelay(10);
         TCC0->CC[1].reg = speed;
     }
 
@@ -36,28 +35,20 @@ void ServoAngle(int angle){
 
 void DirectionSet(int sel, int dir){
     if(sel == 0){
-        if(dir&0x01){
+        if(dir == 1){
             SetHigh(0, 20);
-        }else{
-            SetLow(0, 20);
-        }
-
-        if(dir&0x02){
-            SetHigh(0, 21);
-        }else{
             SetLow(0, 21);
+        }else if(dir == 2){
+            SetLow(0, 20);
+            SetHigh(0, 21);
         }
     }else if(sel==1){
-        if(dir&0x01){
+        if(dir == 1){
             SetLow(0, 2);
-        }else{
-            SetHigh(0, 2);
-        }
-
-        if(dir&0x02){
-            SetLow(0, 14);
-        }else{
             SetHigh(0, 14);
+        }else if(dir == 2){
+            SetHigh(0, 2);
+            SetLow(0, 14);
         }
     }
 }
